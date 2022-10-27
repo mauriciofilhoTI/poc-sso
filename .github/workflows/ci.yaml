@@ -13,23 +13,25 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.head_commit.author.name != 'actions'
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2.1.3
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
       with:
         node-version: '14'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
     - uses: bahmutov/npm-install@v1
-    - run: yarn build
+    - run: npm run build
     - run: npx keycloakify
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: standalone_keycloak_theme
         path: build_keycloak/target/*keycloak-theme*.jar
     - run: npx keycloakify --external-assets
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: keycloak_theme
         path: build_keycloak/target/*keycloak-theme*.jar
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: build
         path: build
