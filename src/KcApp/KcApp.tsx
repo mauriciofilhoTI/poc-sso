@@ -1,45 +1,54 @@
-import "./KcApp.css";
 import { lazy, Suspense } from "react";
 import type { KcContext } from "./kcContext";
-import KcAppBase, { defaultKcProps } from "keycloakify";
+import KcAppBase, { defaultKcProps, getKcContext } from "keycloakify";
 import { useI18n } from "./i18n";
+import { ThemeContextProvider } from "./ThemeProvider";
+
+import './global.css';
 
 const Register = lazy(() => import("./Register"));
 const Terms = lazy(() => import("./Terms"));
-const MyExtraPage1 = lazy(() => import("./MyExtraPage1"));
-const MyExtraPage2 = lazy(() => import("./MyExtraPage2"));
+const Login = lazy(() => import("./Login"));
 
 export type Props = {
-    kcContext: KcContext;
+  kcContext: KcContext;
 };
 
 export default function KcApp({ kcContext }: Props) {
-    const i18n = useI18n({ kcContext });
+  const i18n = useI18n({ kcContext });
 
-    //NOTE: Locales not yet downloaded
-    if (i18n === null) {
-        return null;
-    }
+  //NOTE: Locales not yet downloaded
+  if (i18n === null) {
+    return null;
+  }
 
-    const props = {
-        i18n,
-        ...defaultKcProps,
-        // NOTE: The classes are defined in ./KcApp.css
-        "kcHeaderWrapperClass": "my-color my-font",
-    };
+  const props = {
+    i18n,
+    ...defaultKcProps,
+    // NOTE: The classes are defined in ./KcApp.css
+    kcHeaderWrapperClass: "my-color my-font",
+  };
 
-    return (
-        <Suspense>
-            {(() => {
-                switch (kcContext.pageId) {
-                    case "register.ftl": return <Register {...{ kcContext, ...props }} />;
-                    case "terms.ftl": return <Terms {...{ kcContext, ...props }} />;
-                    case "my-extra-page-1.ftl": return <MyExtraPage1 {...{ kcContext, ...props }} />;
-                    case "my-extra-page-2.ftl": return <MyExtraPage2 {...{ kcContext, ...props }} />;
-                    default: return <KcAppBase {...{ kcContext, ...props }} />;
-                }
-            })()}
-        </Suspense>
-    );
-
+  console.log(defaultKcProps)
+  return (
+    <ThemeContextProvider>
+      <Suspense>
+        {(() => {
+            console.log(kcContext.realm)
+          switch (kcContext.pageId) {
+            case "login.ftl":
+              return kcContext.realm.name === 'master' ? <Login {...{ kcContext, ...props }} /> : <div> HELLO WORLD </div>;
+            case "register.ftl":
+              return <Register {...{ kcContext, ...props }} />;
+            case "terms.ftl":
+              return <Terms {...{ kcContext, ...props }} />;
+            // case "login-reset-password.ftl":
+            //   return 
+            default:
+              return <KcAppBase {...{ kcContext, ...props }} />;
+          }
+        })()}
+      </Suspense>
+    </ThemeContextProvider>
+  );
 }

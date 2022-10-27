@@ -23,10 +23,15 @@
     "license": "MIT",
     "keywords": [],
     "dependencies": {
+        "@emotion/react": "^11.10.4",
+        "@emotion/styled": "^11.10.4",
+        "@king-ds/react": "^1.2.5",
+        "@king-ds/tokens": "^1.1.0",
+        "@mui/material": "^5.10.11",
+        "evt": "^2.4.1",
         "keycloakify": "^6.8.4",
         "react": "18.1.0",
-        "react-dom": "18.1.0",
-        "evt": "^2.4.1"
+        "react-dom": "18.1.0"
     },
     "devDependencies": {
         "@types/node": "^15.3.1",
